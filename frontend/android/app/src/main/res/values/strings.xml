@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">JanAwaaz AI</string>
+    <string name="title_activity_main">JanAwaaz AI</string>
+    <string name="package_name">org.janawaaz.app</string>
+    <string name="custom_url_scheme">org.janawaaz.app</string>
+</resources>
