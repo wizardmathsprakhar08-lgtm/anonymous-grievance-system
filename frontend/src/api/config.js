@@ -20,8 +20,7 @@ export const getApiBaseUrl = () => {
   );
 
   if (isCapacitor) {
-    // Android emulator special IP addressing host machine: 10.0.2.2
-    return 'http://10.0.2.2:8000/api';
+    return 'https://janawaaz-backend-ra47.onrender.com/api';
   }
 
   // 4. Default for Web browser / Vite dev proxy

@@ -1,6 +1,6 @@
-// Central API service for Expo Go App connecting to FastAPI backend
+// Central API service for Expo Go App connecting to 24/7 Render Cloud backend
 
-let currentApiBaseUrl = 'http://10.42.217.217:8000/api';
+let currentApiBaseUrl = 'https://janawaaz-backend-ra47.onrender.com/api';
 
 export const getApiBaseUrl = () => currentApiBaseUrl;
 
