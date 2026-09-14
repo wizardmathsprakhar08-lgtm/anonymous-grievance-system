@@ -4,6 +4,8 @@ A full-stack, offline-capable prototype for anonymous public grievance filing, a
 
 Now equipped with **Mobile App Support (Capacitor Android Native + Installable PWA)**!
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/wizardmathsprakhar08-lgtm/anonymous-grievance-system)
+
 ---
 
 ## 🚀 Quick Start Guide
