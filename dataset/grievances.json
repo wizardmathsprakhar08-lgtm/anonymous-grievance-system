@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "tracking_id": "AGY-D8B8-C7F6-7A2B",
+    "raw_text": "Urgent fire hazard! Electrical transformer on Main Street is sparking near house #12. Call officer John at 9876543210 or email john@example.com immediately!",
+    "sanitized_text": "Urgent fire hazard! Electrical transformer on Main Street is sparking near house #12. Call officer John at [PHONE REDACTED] or email [EMAIL REDACTED] immediately!",
+    "department_id": 3,
+    "urgency_level": "critical",
+    "urgency_score": 1.0,
+    "is_duplicate": 0,
+    "duplicate_of_id": null,
+    "status": "submitted",
+    "created_at": "2026-09-07 18:09:10.401503",
+    "updated_at": "2026-09-07 18:09:10.401527"
+  },
+  {
+    "id": 2,
+    "tracking_id": "AGY-5CB9-5662-4759",
+    "raw_text": "in kharghar sector 4 near bhoomi tower main problem of road construction is arrised and not complete their work it take too much time their and so much traffic their as well as pollution please resolve my problem as much as soon possible \n",
+    "sanitized_text": "in kharghar sector 4 near bhoomi tower main problem of road construction is arrised and not complete their work it take too much time their and so much traffic their as well as pollution please resolve my problem as much as soon possible \n",
+    "department_id": 2,
+    "urgency_level": "low",
+    "urgency_score": 0.2,
+    "is_duplicate": 0,
+    "duplicate_of_id": null,
+    "status": "submitted",
+    "created_at": "2026-09-07 19:39:44.892920",
+    "updated_at": "2026-09-07 19:39:44.892961"
+  },
+  {
+    "id": 3,
+    "tracking_id": "AGY-58F6-9B1B-5F7C",
+    "raw_text": "water supply problem near bus stop sector4 kharghar ",
+    "sanitized_text": "water supply problem near bus stop sector4 kharghar ",
+    "department_id": 1,
+    "urgency_level": "low",
+    "urgency_score": 0.2,
+    "is_duplicate": 0,
+    "duplicate_of_id": null,
+    "status": "submitted",
+    "created_at": "2026-09-07 19:41:17.654934",
+    "updated_at": "2026-09-07 19:41:17.654950"
+  },
+  {
+    "id": 4,
+    "tracking_id": "AGY-9259-82F5-1F66",
+    "raw_text": "CRITICAL EMERGENCY! Main water pipe burst flooding the entire intersection near school #5! Dirty sewage water is entering houses. Call resident Dr. Rajesh at 9123456780 or email rajesh@gmail.com right now!",
+    "sanitized_text": "CRITICAL EMERGENCY! Main water pipe burst flooding the entire intersection near school #5! Dirty sewage water is entering houses. Call resident Dr. [NAME REDACTED] at [PHONE REDACTED] or email [EMAIL REDACTED] right now!",
+    "department_id": 1,
+    "urgency_level": "critical",
+    "urgency_score": 1.0,
+    "is_duplicate": 0,
+    "duplicate_of_id": null,
+    "status": "resolved",
+    "created_at": "2026-09-08 18:45:10.877792",
+    "updated_at": "2026-09-08 18:45:12.770128"
+  },
+  {
+    "id": 5,
+    "tracking_id": "AGY-15BD-2787-FA4E",
+    "raw_text": "Water supply problem in kharghar sector4 ",
+    "sanitized_text": "Water supply problem in kharghar sector4 ",
+    "department_id": 1,
+    "urgency_level": "low",
+    "urgency_score": 0.2,
+    "is_duplicate": 1,
+    "duplicate_of_id": 3,
+    "status": "submitted",
+    "created_at": "2026-09-13 19:08:25.900080",
+    "updated_at": "2026-09-13 19:08:25.900104"
+  }
+]

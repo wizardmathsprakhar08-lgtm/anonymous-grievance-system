@@ -1,0 +1,231 @@
+[
+  {
+    "id": "BM-ELEC-001",
+    "raw_text": "EMERGENCY: Live high tension wire 11KV snapped and sparking violently on wet road near Sector 4 market. Contact Rajesh Kumar at 9876543210 immediately before someone gets electrocuted!",
+    "pii_types_detected": [
+      "PHONE",
+      "NAME"
+    ],
+    "sanitized_text": "EMERGENCY: Live high tension wire 11KV snapped and sparking violently on wet road near Sector 4 market. Contact [NAME REDACTED] at [PHONE REDACTED] immediately before someone gets electrocuted!",
+    "department": "Electricity & Power",
+    "urgency_level": "critical",
+    "urgency_score": 0.98,
+    "category": "Hazardous Live Wire"
+  },
+  {
+    "id": "BM-ELEC-002",
+    "raw_text": "Local distribution transformer exploded with smoke and fire at Block C. Power cut across 500 houses. Call technician Amit Sharma 9811223344 or email amit.sharma@gmail.com.",
+    "pii_types_detected": [
+      "PHONE",
+      "EMAIL",
+      "NAME"
+    ],
+    "sanitized_text": "Local distribution transformer exploded with smoke and fire at Block C. Power cut across 500 houses. Call technician [NAME REDACTED] [PHONE REDACTED] or email [EMAIL REDACTED].",
+    "department": "Electricity & Power",
+    "urgency_level": "critical",
+    "urgency_score": 0.95,
+    "category": "Transformer Fire"
+  },
+  {
+    "id": "BM-ELEC-003",
+    "raw_text": "Frequent unscheduled power cuts for 6 hours daily during board exams in Ward 12. Kindly inspect the local sub-station feeder.",
+    "pii_types_detected": [],
+    "sanitized_text": "Frequent unscheduled power cuts for 6 hours daily during board exams in Ward 12. Kindly inspect the local sub-station feeder.",
+    "department": "Electricity & Power",
+    "urgency_level": "medium",
+    "urgency_score": 0.55,
+    "category": "Power Outage"
+  },
+  {
+    "id": "BM-ELEC-004",
+    "raw_text": "Streetlight pole number 14 on 5th Avenue is not turning on since last Monday. Street is dark at night.",
+    "pii_types_detected": [],
+    "sanitized_text": "Streetlight pole number 14 on 5th Avenue is not turning on since last Monday. Street is dark at night.",
+    "department": "Electricity & Power",
+    "urgency_level": "low",
+    "urgency_score": 0.3,
+    "category": "Streetlight Outage"
+  },
+  {
+    "id": "BM-ELEC-005",
+    "raw_text": "Heavy voltage fluctuation caused television and refrigerator to burn out at Plot 45. Meter number 88721990.",
+    "pii_types_detected": [],
+    "sanitized_text": "Heavy voltage fluctuation caused television and refrigerator to burn out at Plot 45. Meter number 88721990.",
+    "department": "Electricity & Power",
+    "urgency_level": "high",
+    "urgency_score": 0.78,
+    "category": "Voltage Surge"
+  },
+  {
+    "id": "BM-ROAD-001",
+    "raw_text": "FATAL DANGER: Open manhole without cover on unlit highway service lane near City Hospital! Two bikers fell already. Report filed by Priya Verma Aadhaar 4521 8900 1234.",
+    "pii_types_detected": [
+      "AADHAAR",
+      "NAME"
+    ],
+    "sanitized_text": "FATAL DANGER: Open manhole without cover on unlit highway service lane near City Hospital! Two bikers fell already. Report filed by [NAME REDACTED] Aadhaar [AADHAAR REDACTED].",
+    "department": "Roads & Infrastructure",
+    "urgency_level": "critical",
+    "urgency_score": 0.96,
+    "category": "Missing Manhole Cover"
+  },
+  {
+    "id": "BM-ROAD-002",
+    "raw_text": "Huge crater pothole 2 feet deep near railway underpass causing extreme traffic jams and axle damage to ambulances. Call Sunil at 9988776655.",
+    "pii_types_detected": [
+      "PHONE",
+      "NAME"
+    ],
+    "sanitized_text": "Huge crater pothole 2 feet deep near railway underpass causing extreme traffic jams and axle damage to ambulances. Call [NAME REDACTED] at [PHONE REDACTED].",
+    "department": "Roads & Infrastructure",
+    "urgency_level": "high",
+    "urgency_score": 0.82,
+    "category": "Severe Pothole"
+  },
+  {
+    "id": "BM-ROAD-003",
+    "raw_text": "Pedestrian zebra crossing paint is completely faded outside St. Mary School. Drivers do not yield to crossing children.",
+    "pii_types_detected": [],
+    "sanitized_text": "Pedestrian zebra crossing paint is completely faded outside St. Mary School. Drivers do not yield to crossing children.",
+    "department": "Roads & Infrastructure",
+    "urgency_level": "medium",
+    "urgency_score": 0.5,
+    "category": "Road Safety Marking"
+  },
+  {
+    "id": "BM-ROAD-004",
+    "raw_text": "Speed breaker constructed on 80ft road violates IRC standards and has no reflector paint or warning signboards.",
+    "pii_types_detected": [],
+    "sanitized_text": "Speed breaker constructed on 80ft road violates IRC standards and has no reflector paint or warning signboards.",
+    "department": "Roads & Infrastructure",
+    "urgency_level": "low",
+    "urgency_score": 0.35,
+    "category": "Illegal Speed Breaker"
+  },
+  {
+    "id": "BM-ROAD-005",
+    "raw_text": "Bridge guard rail on Kali River bridge is broken off after a truck collision. Precipice drop of 40 feet directly into river.",
+    "pii_types_detected": [],
+    "sanitized_text": "Bridge guard rail on Kali River bridge is broken off after a truck collision. Precipice drop of 40 feet directly into river.",
+    "department": "Roads & Infrastructure",
+    "urgency_level": "critical",
+    "urgency_score": 0.94,
+    "category": "Structural Bridge Hazard"
+  },
+  {
+    "id": "BM-WAT-001",
+    "raw_text": "SEVERE CONTAMINATION: Tap water supplied this morning smells foul like sewage and is blackish-brown. Multiple children vomiting in Govindpuri. Reach Dr. Anita Roy on 9820112233.",
+    "pii_types_detected": [
+      "PHONE",
+      "NAME"
+    ],
+    "sanitized_text": "SEVERE CONTAMINATION: Tap water supplied this morning smells foul like sewage and is blackish-brown. Multiple children vomiting in Govindpuri. Reach [NAME REDACTED] on [PHONE REDACTED].",
+    "department": "Water Supply Department",
+    "urgency_level": "critical",
+    "urgency_score": 0.97,
+    "category": "Sewage Mixing in Drinking Water"
+  },
+  {
+    "id": "BM-WAT-002",
+    "raw_text": "Major 12-inch water trunk pipeline burst at Main Square. Clean drinking water gushing onto road flooding basements.",
+    "pii_types_detected": [],
+    "sanitized_text": "Major 12-inch water trunk pipeline burst at Main Square. Clean drinking water gushing onto road flooding basements.",
+    "department": "Water Supply Department",
+    "urgency_level": "high",
+    "urgency_score": 0.85,
+    "category": "Burst Pipeline"
+  },
+  {
+    "id": "BM-WAT-003",
+    "raw_text": "No municipal water supply in Pocket B for the past 4 days. Water tanker mafia charging 2000 rupees per tanker. Send civic water tanker.",
+    "pii_types_detected": [],
+    "sanitized_text": "No municipal water supply in Pocket B for the past 4 days. Water tanker mafia charging 2000 rupees per tanker. Send civic water tanker.",
+    "department": "Water Supply Department",
+    "urgency_level": "high",
+    "urgency_score": 0.79,
+    "category": "Water Shortage"
+  },
+  {
+    "id": "BM-WAT-004",
+    "raw_text": "Water pressure is very low on 3rd floor flats in Shanti Kunj. Pipeline may have silt buildup.",
+    "pii_types_detected": [],
+    "sanitized_text": "Water pressure is very low on 3rd floor flats in Shanti Kunj. Pipeline may have silt buildup.",
+    "department": "Water Supply Department",
+    "urgency_level": "low",
+    "urgency_score": 0.28,
+    "category": "Low Water Pressure"
+  },
+  {
+    "id": "BM-SAN-001",
+    "raw_text": "Hospital biomedical waste including used needles and infected blood bags dumped illegally in open public playground behind Sector 15 nursery!",
+    "pii_types_detected": [],
+    "sanitized_text": "Hospital biomedical waste including used needles and infected blood bags dumped illegally in open public playground behind Sector 15 nursery!",
+    "department": "Sanitation & Waste Management",
+    "urgency_level": "critical",
+    "urgency_score": 0.97,
+    "category": "Hazardous Biomedical Waste"
+  },
+  {
+    "id": "BM-SAN-002",
+    "raw_text": "Garbage collection truck has not visited Shastri Nagar for 12 days. Huge rotten waste mountain attracting stray dogs and flies.",
+    "pii_types_detected": [],
+    "sanitized_text": "Garbage collection truck has not visited Shastri Nagar for 12 days. Huge rotten waste mountain attracting stray dogs and flies.",
+    "department": "Sanitation & Waste Management",
+    "urgency_level": "high",
+    "urgency_score": 0.8,
+    "category": "Uncollected Garbage"
+  },
+  {
+    "id": "BM-SAN-003",
+    "raw_text": "Open storm drain blocked with plastic trash causing foul black water to overflow onto pedestrian walkway.",
+    "pii_types_detected": [],
+    "sanitized_text": "Open storm drain blocked with plastic trash causing foul black water to overflow onto pedestrian walkway.",
+    "department": "Sanitation & Waste Management",
+    "urgency_level": "medium",
+    "urgency_score": 0.62,
+    "category": "Blocked Drain Overflow"
+  },
+  {
+    "id": "BM-SAN-004",
+    "raw_text": "Public park dustbin lid broken and container is full. Kindly request sanitary staff to replace bin.",
+    "pii_types_detected": [],
+    "sanitized_text": "Public park dustbin lid broken and container is full. Kindly request sanitary staff to replace bin.",
+    "department": "Sanitation & Waste Management",
+    "urgency_level": "low",
+    "urgency_score": 0.25,
+    "category": "Dustbin Repair"
+  },
+  {
+    "id": "BM-CORR-001",
+    "raw_text": "Sub-registrar clerk Ramesh in Tehsil office explicitly demanded 25,000 cash bribe to release land registry mutation papers. File ref: MUT/2026/891. My phone is 9711002233.",
+    "pii_types_detected": [
+      "PHONE",
+      "NAME"
+    ],
+    "sanitized_text": "Sub-registrar clerk [NAME REDACTED] in Tehsil office explicitly demanded 25,000 cash bribe to release land registry mutation papers. File ref: MUT/2026/891. My phone is [PHONE REDACTED].",
+    "department": "Anti-Corruption & Governance",
+    "urgency_level": "high",
+    "urgency_score": 0.88,
+    "category": "Bribery & Extortion"
+  },
+  {
+    "id": "BM-CORR-002",
+    "raw_text": "Ration shop FPS-340 dealer siphoning subsidized wheat and rice to private market and refusing PDS quota to BPL cardholders without illegal 200 rupee fee.",
+    "pii_types_detected": [],
+    "sanitized_text": "Ration shop FPS-340 dealer siphoning subsidized wheat and rice to private market and refusing PDS quota to BPL cardholders without illegal 200 rupee fee.",
+    "department": "Anti-Corruption & Governance",
+    "urgency_level": "high",
+    "urgency_score": 0.84,
+    "category": "PDS Racket"
+  },
+  {
+    "id": "BM-CORR-003",
+    "raw_text": "Government primary school mid-day meal funds embezzled; children given only watery porridge while principal misreports procurement bills.",
+    "pii_types_detected": [],
+    "sanitized_text": "Government primary school mid-day meal funds embezzled; children given only watery porridge while principal misreports procurement bills.",
+    "department": "Anti-Corruption & Governance",
+    "urgency_level": "critical",
+    "urgency_score": 0.92,
+    "category": "Public Embezzlement"
+  }
+]

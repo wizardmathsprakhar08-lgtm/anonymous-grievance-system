@@ -1,0 +1,8 @@
+id,grievance_id,previous_status,new_status,changed_by_officer_id,note,timestamp
+1,1,,submitted,,Grievance ingested anonymously. Classified to 'Electricity & Power' with Urgency: CRITICAL (Score: 1.0).,2026-09-07 18:09:10.416015
+2,2,,submitted,,Grievance ingested anonymously. Classified to 'Roads & Infrastructure' with Urgency: LOW (Score: 0.2).,2026-09-07 19:39:44.936357
+3,3,,submitted,,Grievance ingested anonymously. Classified to 'Water Supply Department' with Urgency: LOW (Score: 0.2).,2026-09-07 19:41:17.664187
+4,4,,submitted,,Grievance ingested anonymously. Classified to 'Water Supply Department' with Urgency: CRITICAL (Score: 1.0).,2026-09-08 18:45:10.955757
+5,4,submitted,in_progress,2,Emergency repair crew dispatched with excavation team.,2026-09-08 18:45:11.734230
+6,4,in_progress,resolved,2,Main pipeline repaired and tested. Water flow restored normal.,2026-09-08 18:45:12.781550
+7,5,,submitted,,Grievance ingested anonymously. Classified to 'Water Supply Department' with Urgency: LOW (Score: 0.2). [DUPLICATE DETECTED: Similar to Grievance #3],2026-09-13 19:08:25.960220

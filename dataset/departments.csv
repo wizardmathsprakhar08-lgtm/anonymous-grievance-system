@@ -1,0 +1,6 @@
+id,name,code,description
+1,Water Supply Department,water,"Handles water leakage, contamination, supply shortages, and pipeline issues."
+2,Roads & Infrastructure,road,"Handles potholes, broken street lights, traffic signals, and road damage."
+3,Electricity & Power,electricity,"Handles power outages, dangerous exposed wiring, transformer failures."
+4,Sanitation & Waste Management,sanitation,"Handles uncollected garbage, open drains, public sanitation, overflow."
+5,Anti-Corruption & Governance,corruption,"Handles bribery complaints, extortion, misconduct, and administrative fraud."

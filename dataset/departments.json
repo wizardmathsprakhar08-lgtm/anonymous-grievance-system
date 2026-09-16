@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Water Supply Department",
+    "code": "water",
+    "description": "Handles water leakage, contamination, supply shortages, and pipeline issues."
+  },
+  {
+    "id": 2,
+    "name": "Roads & Infrastructure",
+    "code": "road",
+    "description": "Handles potholes, broken street lights, traffic signals, and road damage."
+  },
+  {
+    "id": 3,
+    "name": "Electricity & Power",
+    "code": "electricity",
+    "description": "Handles power outages, dangerous exposed wiring, transformer failures."
+  },
+  {
+    "id": 4,
+    "name": "Sanitation & Waste Management",
+    "code": "sanitation",
+    "description": "Handles uncollected garbage, open drains, public sanitation, overflow."
+  },
+  {
+    "id": 5,
+    "name": "Anti-Corruption & Governance",
+    "code": "corruption",
+    "description": "Handles bribery complaints, extortion, misconduct, and administrative fraud."
+  }
+]

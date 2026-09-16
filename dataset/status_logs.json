@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "grievance_id": 1,
+    "previous_status": null,
+    "new_status": "submitted",
+    "changed_by_officer_id": null,
+    "note": "Grievance ingested anonymously. Classified to 'Electricity & Power' with Urgency: CRITICAL (Score: 1.0).",
+    "timestamp": "2026-09-07 18:09:10.416015"
+  },
+  {
+    "id": 2,
+    "grievance_id": 2,
+    "previous_status": null,
+    "new_status": "submitted",
+    "changed_by_officer_id": null,
+    "note": "Grievance ingested anonymously. Classified to 'Roads & Infrastructure' with Urgency: LOW (Score: 0.2).",
+    "timestamp": "2026-09-07 19:39:44.936357"
+  },
+  {
+    "id": 3,
+    "grievance_id": 3,
+    "previous_status": null,
+    "new_status": "submitted",
+    "changed_by_officer_id": null,
+    "note": "Grievance ingested anonymously. Classified to 'Water Supply Department' with Urgency: LOW (Score: 0.2).",
+    "timestamp": "2026-09-07 19:41:17.664187"
+  },
+  {
+    "id": 4,
+    "grievance_id": 4,
+    "previous_status": null,
+    "new_status": "submitted",
+    "changed_by_officer_id": null,
+    "note": "Grievance ingested anonymously. Classified to 'Water Supply Department' with Urgency: CRITICAL (Score: 1.0).",
+    "timestamp": "2026-09-08 18:45:10.955757"
+  },
+  {
+    "id": 5,
+    "grievance_id": 4,
+    "previous_status": "submitted",
+    "new_status": "in_progress",
+    "changed_by_officer_id": 2,
+    "note": "Emergency repair crew dispatched with excavation team.",
+    "timestamp": "2026-09-08 18:45:11.734230"
+  },
+  {
+    "id": 6,
+    "grievance_id": 4,
+    "previous_status": "in_progress",
+    "new_status": "resolved",
+    "changed_by_officer_id": 2,
+    "note": "Main pipeline repaired and tested. Water flow restored normal.",
+    "timestamp": "2026-09-08 18:45:12.781550"
+  },
+  {
+    "id": 7,
+    "grievance_id": 5,
+    "previous_status": null,
+    "new_status": "submitted",
+    "changed_by_officer_id": null,
+    "note": "Grievance ingested anonymously. Classified to 'Water Supply Department' with Urgency: LOW (Score: 0.2). [DUPLICATE DETECTED: Similar to Grievance #3]",
+    "timestamp": "2026-09-13 19:08:25.960220"
+  }
+]
