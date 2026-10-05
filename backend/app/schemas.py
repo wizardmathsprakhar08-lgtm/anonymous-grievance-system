@@ -5,6 +5,8 @@ from datetime import datetime
 class GrievanceSubmitRequest(BaseModel):
     text: str
     category_hint: Optional[str] = None
+    media_url: Optional[str] = None
+    media_type: Optional[str] = None  # 'image' or 'video'
 
 class StatusLogSchema(BaseModel):
     id: int
@@ -29,6 +31,11 @@ class GrievanceResponse(BaseModel):
     is_duplicate: bool
     duplicate_of_id: Optional[int] = None
     status: str
+    media_url: Optional[str] = None
+    media_type: Optional[str] = None
+    resolved_by: Optional[str] = None
+    resolution_note: Optional[str] = None
+    resolved_at: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime
     status_logs: List[StatusLogSchema] = []

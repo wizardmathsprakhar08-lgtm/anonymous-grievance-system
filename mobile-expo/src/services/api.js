@@ -42,11 +42,24 @@ const request = async (endpoint, options = {}) => {
 
 export const api = {
   // Public Citizen Endpoints
-  submitGrievance: (text, category_hint = null) => {
+  submitGrievance: (text, category_hint = null, media_url = null, media_type = null) => {
     return request('/grievances', {
       method: 'POST',
-      body: JSON.stringify({ text, category_hint: category_hint || null })
+      body: JSON.stringify({ 
+        text, 
+        category_hint: category_hint || null,
+        media_url: media_url || null,
+        media_type: media_type || null
+      })
     });
+  },
+
+  getPublicFeed: (statusFilter = '') => {
+    let endpoint = '/grievances';
+    if (statusFilter && statusFilter !== 'all') {
+      endpoint += `?status=${encodeURIComponent(statusFilter)}`;
+    }
+    return request(endpoint);
   },
 
   getGrievance: (trackingId) => {

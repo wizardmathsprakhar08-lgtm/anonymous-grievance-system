@@ -41,6 +41,11 @@ class Grievance(Base):
     is_duplicate = Column(Boolean, default=False)
     duplicate_of_id = Column(Integer, ForeignKey("grievances.id"), nullable=True)
     status = Column(String(20), nullable=False, default="submitted")  # 'submitted', 'in_progress', 'resolved', 'rejected'
+    media_url = Column(Text, nullable=True)
+    media_type = Column(String(20), nullable=True)
+    resolved_by = Column(String(100), nullable=True)
+    resolution_note = Column(Text, nullable=True)
+    resolved_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 

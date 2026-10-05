@@ -57,6 +57,17 @@ def update_grievance_status(
 
     prev_status = grievance.status
     grievance.status = req.new_status
+    
+    import datetime
+    if req.new_status == "resolved":
+        dept_label = current_user.department.name if current_user.department else "Municipal Administration"
+        grievance.resolved_by = f"{current_user.username} ({dept_label})"
+        grievance.resolution_note = req.note or f"Issue investigated and officially resolved by {current_user.username}."
+        grievance.resolved_at = datetime.datetime.utcnow()
+    elif req.new_status == "in_progress":
+        if req.note:
+            grievance.resolution_note = req.note
+
     db.commit()
 
     # Append to StatusLog

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, CheckCircle, AlertTriangle, Clock, ArrowRight, UserCheck, MessageSquare } from 'lucide-react';
+import { X, ShieldCheck, CheckCircle, AlertTriangle, Clock, ArrowRight, UserCheck, MessageSquare, Image as ImageIcon, Video, CheckCircle2 } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
 import UrgencyBadge from '../components/UrgencyBadge';
 import Timeline from '../components/Timeline';
@@ -84,6 +84,24 @@ const GrievanceDetail = ({ grievance, onClose, onUpdateSuccess, token }) => {
           </div>
         )}
 
+        {/* Resolved Banner if already resolved */}
+        {grievance.status === 'resolved' && (
+          <div className="bg-emerald-950/70 border border-emerald-500/50 rounded-xl p-4 text-xs text-emerald-200 space-y-1">
+            <div className="flex items-center space-x-2 font-bold text-white text-sm">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>Resolved by: {grievance.resolved_by || 'Officer'}</span>
+            </div>
+            {grievance.resolution_note && (
+              <p className="text-slate-300 italic">"{grievance.resolution_note}"</p>
+            )}
+            {grievance.resolved_at && (
+              <span className="text-slate-400 block text-[11px]">
+                Completed on: {new Date(grievance.resolved_at).toLocaleString()}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Sanitized Text Card */}
         <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
@@ -93,6 +111,31 @@ const GrievanceDetail = ({ grievance, onClose, onUpdateSuccess, token }) => {
             "{grievance.sanitized_text}"
           </p>
         </div>
+
+        {/* Citizen Attached Photo/Video Evidence */}
+        {grievance.media_url && (
+          <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider block flex items-center space-x-1.5">
+              {grievance.media_type === 'video' ? <Video className="w-4 h-4" /> : <ImageIcon className="w-4 h-4" />}
+              <span>Citizen Uploaded {grievance.media_type === 'video' ? 'Video' : 'Photo'} Evidence</span>
+            </span>
+            <div className="rounded-xl overflow-hidden border border-slate-800 bg-black flex items-center justify-center max-h-80">
+              {grievance.media_type === 'video' ? (
+                <video
+                  src={grievance.media_url}
+                  controls
+                  className="w-full max-h-80 object-contain"
+                />
+              ) : (
+                <img
+                  src={grievance.media_url}
+                  alt="Citizen Uploaded Evidence"
+                  className="w-full max-h-80 object-contain"
+                />
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Action Form */}
         <form onSubmit={handleUpdate} className="bg-slate-800/80 p-5 rounded-xl border border-slate-700/80 space-y-4">

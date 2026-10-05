@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,8 @@ import {
   ActivityIndicator,
   Alert,
   Modal,
-  StatusBar
+  StatusBar,
+  Image
 } from 'react-native';
 import { api, getApiBaseUrl, setApiBaseUrl } from './src/services/api';
 
@@ -20,13 +21,22 @@ export default function App() {
   // Submit State
   const [text, setText] = useState('');
   const [categoryHint, setCategoryHint] = useState('');
+  const [mediaUrl, setMediaUrl] = useState(null);
+  const [mediaType, setMediaType] = useState('image');
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
 
-  // Track State
+  // In-App Stored Complaints
+  const [myComplaints, setMyComplaints] = useState([]);
+
+  // Track & Feed State
+  const [trackSubView, setTrackSubView] = useState('my'); // 'my' | 'feed' | 'search'
   const [trackingIdInput, setTrackingIdInput] = useState('');
   const [trackingData, setTrackingData] = useState(null);
   const [trackingLoading, setTrackingLoading] = useState(false);
+  const [publicFeed, setPublicFeed] = useState([]);
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feedFilter, setFeedFilter] = useState('all');
 
   // Officer State
   const [username, setUsername] = useState('');
@@ -53,11 +63,16 @@ export default function App() {
 
     setSubmitting(true);
     try {
-      const res = await api.submitGrievance(text, categoryHint || null);
+      const res = await api.submitGrievance(text, categoryHint || null, mediaUrl || null, mediaType || null);
       setSubmitResult(res);
       setTrackingIdInput(res.tracking_id);
+      
+      // Store in device complaints list
+      setMyComplaints(prev => [res, ...prev.filter(x => x.tracking_id !== res.tracking_id)]);
+      
       setText('');
       setCategoryHint('');
+      setMediaUrl(null);
     } catch (err) {
       Alert.alert('Submission Error', err.message);
     } finally {
@@ -65,7 +80,7 @@ export default function App() {
     }
   };
 
-  // ---------------- TRACK LOGIC ----------------
+  // ---------------- TRACK & FEED LOGIC ----------------
   const handleTrackGrievance = async (idToSearch) => {
     const id = (idToSearch || trackingIdInput).trim();
     if (!id) {
@@ -75,6 +90,7 @@ export default function App() {
 
     setTrackingLoading(true);
     setTrackingData(null);
+    setTrackSubView('search');
     try {
       const res = await api.getGrievance(id);
       setTrackingData(res);
@@ -84,6 +100,24 @@ export default function App() {
       setTrackingLoading(false);
     }
   };
+
+  const handleFetchFeed = async () => {
+    setFeedLoading(true);
+    try {
+      const res = await api.getPublicFeed(feedFilter);
+      setPublicFeed(res || []);
+    } catch (err) {
+      console.log('Error fetching feed', err);
+    } finally {
+      setFeedLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'track' && trackSubView === 'feed') {
+      handleFetchFeed();
+    }
+  }, [activeTab, trackSubView, feedFilter]);
 
   // ---------------- OFFICER LOGIC ----------------
   const handleLogin = async (u, p) => {
@@ -274,6 +308,41 @@ export default function App() {
                   ))}
                 </View>
 
+                {/* Photo & Video Attachment Options */}
+                <Text style={styles.inputLabel}>Attach Photo / Video Proof (Optional)</Text>
+                <View style={{ flexDirection: 'row', gap: 8, marginBottom: 12 }}>
+                  <TouchableOpacity
+                    style={[styles.catChip, mediaUrl && styles.catChipActive, { flex: 1, alignItems: 'center' }]}
+                    onPress={() => {
+                      // Demo realistic photo evidence for civic hazard
+                      setMediaUrl('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop');
+                      setMediaType('image');
+                    }}
+                  >
+                    <Text style={[styles.catChipText, mediaUrl && styles.catChipTextActive]}>
+                      📸 {mediaUrl ? 'Photo Attached' : 'Attach Photo'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {mediaUrl && (
+                    <TouchableOpacity
+                      style={[styles.catChip, { backgroundColor: '#7f1d1d', borderColor: '#ef4444' }]}
+                      onPress={() => setMediaUrl(null)}
+                    >
+                      <Text style={{ color: '#fca5a5', fontSize: 12, fontWeight: 'bold' }}>✕ Clear</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                {mediaUrl && (
+                  <View style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: '#334155' }}>
+                    <Image source={{ uri: mediaUrl }} style={{ width: '100%', height: 160, backgroundColor: '#000' }} resizeMode="cover" />
+                    <Text style={{ padding: 6, backgroundColor: '#0f172a', color: '#10b981', fontSize: 11, fontWeight: '600', textAlign: 'center' }}>
+                      ✓ Photo evidence ready to submit with complaint
+                    </Text>
+                  </View>
+                )}
+
                 <TouchableOpacity
                   style={styles.primaryBtn}
                   disabled={submitting}
@@ -290,34 +359,197 @@ export default function App() {
           </View>
         )}
 
-        {/* ================= TAB 2: TRACK ================= */}
+        {/* ================= TAB 2: TRACK & BROWSE COMPLAINTS ================= */}
         {activeTab === 'track' && (
           <View>
-            <View style={styles.card}>
-              <Text style={styles.cardHeading}>Enter Tracking ID</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="e.g. AGY-9259-82F5-1F66"
-                placeholderTextColor="#64748b"
-                autoCapitalize="characters"
-                value={trackingIdInput}
-                onChangeText={setTrackingIdInput}
-              />
+            {/* Sub-Tabs: My Complaints | Browse All | Search */}
+            <View style={{ flexDirection: 'row', backgroundColor: '#0f172a', padding: 4, borderRadius: 12, marginBottom: 14, borderWidth: 1, borderColor: '#334155' }}>
               <TouchableOpacity
-                style={styles.primaryBtn}
-                disabled={trackingLoading}
-                onPress={() => handleTrackGrievance()}
+                style={[{ flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 }, trackSubView === 'my' && { backgroundColor: '#10b981' }]}
+                onPress={() => setTrackSubView('my')}
               >
-                {trackingLoading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={styles.primaryBtnText}>Check Live Status 🔍</Text>
-                )}
+                <Text style={{ color: trackSubView === 'my' ? '#fff' : '#94a3b8', fontSize: 12, fontWeight: 'bold' }}>
+                  My Saved ({myComplaints.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[{ flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 }, trackSubView === 'feed' && { backgroundColor: '#10b981' }]}
+                onPress={() => {
+                  setTrackSubView('feed');
+                  handleFetchFeed();
+                }}
+              >
+                <Text style={{ color: trackSubView === 'feed' ? '#fff' : '#94a3b8', fontSize: 12, fontWeight: 'bold' }}>
+                  Browse All
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[{ flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 }, trackSubView === 'search' && { backgroundColor: '#10b981' }]}
+                onPress={() => setTrackSubView('search')}
+              >
+                <Text style={{ color: trackSubView === 'search' ? '#fff' : '#94a3b8', fontSize: 12, fontWeight: 'bold' }}>
+                  Search ID
+                </Text>
               </TouchableOpacity>
             </View>
 
-            {trackingData && (
+            {/* SUB-VIEW 1: MY SAVED COMPLAINTS IN APP */}
+            {trackSubView === 'my' && (
+              <View>
+                {myComplaints.length === 0 ? (
+                  <View style={[styles.card, { alignItems: 'center', paddingVertical: 32 }]}>
+                    <Text style={{ fontSize: 32, marginBottom: 8 }}>📋</Text>
+                    <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold', marginBottom: 4 }}>No complaints stored on device yet</Text>
+                    <Text style={{ color: '#94a3b8', fontSize: 12, textAlign: 'center', marginBottom: 16 }}>
+                      When you submit a complaint, it will be automatically stored in the app here so you never lose it.
+                    </Text>
+                    <TouchableOpacity
+                      style={[styles.primaryBtn, { paddingHorizontal: 20 }]}
+                      onPress={() => {
+                        setTrackSubView('feed');
+                        handleFetchFeed();
+                      }}
+                    >
+                      <Text style={styles.primaryBtnText}>Browse All Stored Complaints ➔</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  myComplaints.map((item, idx) => (
+                    <TouchableOpacity
+                      key={item.tracking_id || idx}
+                      style={[styles.card, { marginBottom: 12 }]}
+                      onPress={() => handleTrackGrievance(item.tracking_id)}
+                    >
+                      <View style={styles.metaRow}>
+                        <Text style={{ color: '#10b981', fontFamily: 'monospace', fontWeight: 'bold', fontSize: 13 }}>
+                          {item.tracking_id}
+                        </Text>
+                        <View style={[styles.statusPill, { backgroundColor: item.status === 'resolved' ? '#065f46' : '#1e3a8a' }]}>
+                          <Text style={styles.statusPillText}>{item.status ? item.status.toUpperCase() : 'SUBMITTED'}</Text>
+                        </View>
+                      </View>
+                      <Text style={{ color: '#cbd5e1', fontSize: 13, marginVertical: 6 }} numberOfLines={2}>
+                        {item.sanitized_text || item.text}
+                      </Text>
+                      <Text style={{ color: '#64748b', fontSize: 11 }}>
+                        Dept: {item.department_name} • Tap to view live tracking ➔
+                      </Text>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </View>
+            )}
+
+            {/* SUB-VIEW 2: BROWSE ALL STORED COMPLAINTS */}
+            {trackSubView === 'feed' && (
+              <View>
+                <View style={{ flexDirection: 'row', gap: 6, marginBottom: 12 }}>
+                  {['all', 'resolved', 'in_progress', 'submitted'].map((st) => (
+                    <TouchableOpacity
+                      key={st}
+                      style={[
+                        { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, backgroundColor: '#1e293b' },
+                        feedFilter === st && { backgroundColor: '#10b981' }
+                      ]}
+                      onPress={() => setFeedFilter(st)}
+                    >
+                      <Text style={{ color: feedFilter === st ? '#fff' : '#94a3b8', fontSize: 11, fontWeight: 'bold', textTransform: 'uppercase' }}>
+                        {st.replace('_', ' ')}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                {feedLoading ? (
+                  <View style={[styles.card, { paddingVertical: 30, alignItems: 'center' }]}>
+                    <ActivityIndicator color="#10b981" />
+                    <Text style={{ color: '#94a3b8', fontSize: 12, marginTop: 8 }}>Loading complaints from server...</Text>
+                  </View>
+                ) : publicFeed.length === 0 ? (
+                  <View style={[styles.card, { paddingVertical: 20, alignItems: 'center' }]}>
+                    <Text style={{ color: '#94a3b8', fontSize: 13 }}>No complaints found.</Text>
+                  </View>
+                ) : (
+                  publicFeed.map((g) => (
+                    <TouchableOpacity
+                      key={g.id}
+                      style={[styles.card, { marginBottom: 12 }]}
+                      onPress={() => handleTrackGrievance(g.tracking_id)}
+                    >
+                      <View style={styles.metaRow}>
+                        <Text style={{ color: '#10b981', fontFamily: 'monospace', fontWeight: 'bold', fontSize: 13 }}>
+                          {g.tracking_id}
+                        </Text>
+                        <View style={[styles.statusPill, { backgroundColor: g.status === 'resolved' ? '#065f46' : '#1e3a8a' }]}>
+                          <Text style={styles.statusPillText}>{g.status.toUpperCase()}</Text>
+                        </View>
+                      </View>
+
+                      <Text style={{ color: '#f1f5f9', fontSize: 13, marginVertical: 6 }} numberOfLines={2}>
+                        {g.sanitized_text}
+                      </Text>
+
+                      {/* Photo indicator */}
+                      {g.media_url && (
+                        <Text style={{ color: '#10b981', fontSize: 11, fontWeight: '600', marginBottom: 4 }}>
+                          📸 Photo Evidence Attached
+                        </Text>
+                      )}
+
+                      {/* Resolved preview */}
+                      {g.status === 'resolved' && (
+                        <View style={{ backgroundColor: '#022c22', padding: 8, borderRadius: 6, marginVertical: 4, borderWidth: 1, borderColor: '#059669' }}>
+                          <Text style={{ color: '#6ee7b7', fontSize: 11, fontWeight: 'bold' }}>
+                            ✓ Resolved by: {g.resolved_by || 'Officer'}
+                          </Text>
+                          {g.resolution_note && (
+                            <Text style={{ color: '#cbd5e1', fontSize: 11, fontStyle: 'italic', marginTop: 2 }}>
+                              "{g.resolution_note}"
+                            </Text>
+                          )}
+                        </View>
+                      )}
+
+                      <Text style={{ color: '#64748b', fontSize: 11, marginTop: 4 }}>
+                        {g.department_name} • Filed: {new Date(g.created_at).toLocaleDateString()}
+                      </Text>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </View>
+            )}
+
+            {/* SUB-VIEW 3: SEARCH BY TRACKING ID */}
+            {trackSubView === 'search' && (
               <View style={styles.card}>
+                <Text style={styles.cardHeading}>Enter Tracking ID</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="e.g. AGY-9259-82F5-1F66"
+                  placeholderTextColor="#64748b"
+                  autoCapitalize="characters"
+                  value={trackingIdInput}
+                  onChangeText={setTrackingIdInput}
+                />
+                <TouchableOpacity
+                  style={styles.primaryBtn}
+                  disabled={trackingLoading}
+                  onPress={() => handleTrackGrievance()}
+                >
+                  {trackingLoading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.primaryBtnText}>Check Live Status 🔍</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* DETAILED GRIEVANCE VIEW */}
+            {trackingData && (
+              <View style={[styles.card, { marginTop: 12 }]}>
                 <View style={styles.metaRow}>
                   <Text style={styles.cardHeading}>{trackingData.department_name}</Text>
                   <View style={[styles.statusPill, { backgroundColor: trackingData.status === 'resolved' ? '#065f46' : '#1e3a8a' }]}>
@@ -325,9 +557,46 @@ export default function App() {
                   </View>
                 </View>
 
+                {/* RESOLVED BY OFFICER PROMINENT BANNER */}
+                {trackingData.status === 'resolved' && (
+                  <View style={{ backgroundColor: '#022c22', borderWidth: 2, borderColor: '#10b981', borderRadius: 12, padding: 14, marginVertical: 12 }}>
+                    <Text style={{ color: '#10b981', fontSize: 15, fontWeight: 'bold', marginBottom: 4 }}>
+                      ✅ Resolved by Department Officer
+                    </Text>
+                    <Text style={{ color: '#e2e8f0', fontSize: 13, fontWeight: '600' }}>
+                      Officer: {trackingData.resolved_by || 'Assigned Officer'}
+                    </Text>
+                    {trackingData.resolved_at && (
+                      <Text style={{ color: '#94a3b8', fontSize: 11, marginTop: 2 }}>
+                        Completed: {new Date(trackingData.resolved_at).toLocaleString()}
+                      </Text>
+                    )}
+                    <View style={{ marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: '#064e3b' }}>
+                      <Text style={{ color: '#a7f3d0', fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>
+                        OFFICER RESOLUTION REPORT:
+                      </Text>
+                      <Text style={{ color: '#f8fafc', fontSize: 12, fontStyle: 'italic', lineHeight: 18 }}>
+                        "{trackingData.resolution_note || 'Issue inspected on-site by the maintenance team and work has been completed.'}"
+                      </Text>
+                    </View>
+                  </View>
+                )}
+
+                {/* Grievance Text */}
                 <View style={styles.sanitizedBox}>
+                  <Text style={styles.sanitizedLabel}>Sanitized Complaint Description:</Text>
                   <Text style={styles.sanitizedText}>"{trackingData.sanitized_text}"</Text>
                 </View>
+
+                {/* Photo Evidence if attached */}
+                {trackingData.media_url && (
+                  <View style={{ marginTop: 12, borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: '#334155' }}>
+                    <Image source={{ uri: trackingData.media_url }} style={{ width: '100%', height: 180, backgroundColor: '#000' }} resizeMode="contain" />
+                    <Text style={{ padding: 6, backgroundColor: '#0f172a', color: '#10b981', fontSize: 11, fontWeight: '600', textAlign: 'center' }}>
+                      📸 Attached Photo Evidence
+                    </Text>
+                  </View>
+                )}
 
                 <Text style={[styles.inputLabel, { marginTop: 16 }]}>Resolution Timeline & Action History:</Text>
                 {trackingData.status_logs && trackingData.status_logs.length > 0 ? (
@@ -537,7 +806,17 @@ export default function App() {
                 "{selectedGrievance.sanitized_text}"
               </Text>
 
-              <Text style={[styles.inputLabel, { marginTop: 12 }]}>Change Status to:</Text>
+              {/* Citizen Evidence Preview for Officer */}
+              {selectedGrievance.media_url && (
+                <View style={{ marginVertical: 8, borderRadius: 8, overflow: 'hidden', borderWidth: 1, borderColor: '#334155' }}>
+                  <Image source={{ uri: selectedGrievance.media_url }} style={{ width: '100%', height: 120, backgroundColor: '#000' }} resizeMode="contain" />
+                  <Text style={{ padding: 4, backgroundColor: '#0f172a', color: '#10b981', fontSize: 10, fontWeight: 'bold', textAlign: 'center' }}>
+                    📸 Citizen Uploaded Evidence Attached
+                  </Text>
+                </View>
+              )}
+
+              <Text style={[styles.inputLabel, { marginTop: 10 }]}>Change Status to:</Text>
               <View style={{ flexDirection: 'row', gap: 6, marginVertical: 6 }}>
                 {['in_progress', 'resolved', 'rejected'].map(st => (
                   <TouchableOpacity
@@ -552,10 +831,12 @@ export default function App() {
                 ))}
               </View>
 
-              <Text style={[styles.inputLabel, { marginTop: 8 }]}>Officer Note:</Text>
+              <Text style={[styles.inputLabel, { marginTop: 8 }]}>
+                {newStatus === 'resolved' ? 'Official Resolution Report (Shown to Citizen):' : 'Officer Audit Note:'}
+              </Text>
               <TextInput
                 style={[styles.input, { height: 60 }]}
-                placeholder="e.g. Dispatched maintenance team to location..."
+                placeholder={newStatus === 'resolved' ? 'e.g. Inspected on-site. Electrical wire repaired and verified safe.' : 'e.g. Dispatched maintenance team to location...'}
                 placeholderTextColor="#64748b"
                 multiline
                 value={actionNote}

@@ -26,6 +26,26 @@ def seed_db():
     from app.models.models import Department, Officer, Grievance, StatusLog
     
     Base.metadata.create_all(bind=engine)
+    
+    # Run auto-migration for newly added columns if sqlite
+    try:
+        with engine.connect() as conn:
+            from sqlalchemy import text
+            for col, col_type in [
+                ("media_url", "TEXT"),
+                ("media_type", "VARCHAR(20)"),
+                ("resolved_by", "VARCHAR(100)"),
+                ("resolution_note", "TEXT"),
+                ("resolved_at", "DATETIME")
+            ]:
+                try:
+                    conn.execute(text(f"ALTER TABLE grievances ADD COLUMN {col} {col_type}"))
+                    conn.commit()
+                except Exception:
+                    pass
+    except Exception:
+        pass
+
     db = SessionLocal()
     try:
         # Check if already seeded

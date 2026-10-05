@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Send, Copy, Check, Sparkles, AlertTriangle, ArrowRight, EyeOff } from 'lucide-react';
+import { ShieldCheck, Send, Copy, Check, Sparkles, AlertTriangle, ArrowRight, EyeOff, Camera, Video, Image as ImageIcon, Trash2, Paperclip } from 'lucide-react';
 import UrgencyBadge from '../components/UrgencyBadge';
 import { apiFetch } from '../api/config';
 
@@ -8,10 +8,40 @@ const SubmitGrievance = () => {
   const navigate = useNavigate();
   const [text, setText] = useState('');
   const [categoryHint, setCategoryHint] = useState('');
+  const [mediaUrl, setMediaUrl] = useState(null);
+  const [mediaType, setMediaType] = useState(null);
+  const [mediaName, setMediaName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
+
+  const handleMediaUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 25 * 1024 * 1024) {
+      setError('File size too large. Please select a photo or video under 25MB.');
+      return;
+    }
+
+    const type = file.type.startsWith('video') ? 'video' : 'image';
+    setMediaType(type);
+    setMediaName(file.name);
+    setError('');
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setMediaUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeMedia = () => {
+    setMediaUrl(null);
+    setMediaType(null);
+    setMediaName('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +59,9 @@ const SubmitGrievance = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: text,
-          category_hint: categoryHint || null
+          category_hint: categoryHint || null,
+          media_url: mediaUrl || null,
+          media_type: mediaType || null
         })
       });
 
@@ -40,6 +72,25 @@ const SubmitGrievance = () => {
 
       const data = await response.json();
       setResult(data);
+
+      // Save to local storage for "My Complaints" in-app persistence
+      try {
+        const saved = JSON.parse(localStorage.getItem('my_grievances') || '[]');
+        const newEntry = {
+          tracking_id: data.tracking_id,
+          sanitized_text: data.sanitized_text,
+          department_name: data.department_name,
+          urgency_level: data.urgency_level,
+          status: data.status,
+          media_url: data.media_url,
+          media_type: data.media_type,
+          created_at: data.created_at
+        };
+        const filtered = saved.filter(g => g.tracking_id !== data.tracking_id);
+        localStorage.setItem('my_grievances', JSON.stringify([newEntry, ...filtered].slice(0, 50)));
+      } catch (err) {
+        console.warn('Failed to save to localStorage', err);
+      }
     } catch (err) {
       setError(err.message || 'An unexpected error occurred. Make sure the backend server is running.');
     } finally {
@@ -111,7 +162,7 @@ const SubmitGrievance = () => {
           </div>
 
           {/* Category Dropdown Hint */}
-          <div className="mb-8">
+          <div className="mb-6">
             <label className="block text-sm font-semibold text-slate-200 mb-2">
               Department Category Hint <span className="text-slate-400 font-normal">(Optional AI Assist)</span>
             </label>
@@ -127,6 +178,77 @@ const SubmitGrievance = () => {
               <option value="sanitation">Sanitation & Waste Management</option>
               <option value="corruption">Anti-Corruption & Governance</option>
             </select>
+          </div>
+
+          {/* Photo & Video Attachment */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-semibold text-slate-200 flex items-center space-x-1.5">
+                <Camera className="w-4 h-4 text-emerald-400" />
+                <span>Attach Photo or Video Evidence</span>
+                <span className="text-slate-400 font-normal text-xs">(Optional)</span>
+              </label>
+              {mediaUrl && (
+                <button
+                  type="button"
+                  onClick={removeMedia}
+                  className="text-xs text-rose-400 hover:text-rose-300 flex items-center space-x-1 font-medium transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove Media</span>
+                </button>
+              )}
+            </div>
+
+            {!mediaUrl ? (
+              <label className="border-2 border-dashed border-slate-700 hover:border-emerald-500/60 bg-slate-900/60 rounded-xl p-5 flex flex-col items-center justify-center cursor-pointer transition-colors group">
+                <div className="flex items-center space-x-3 text-slate-400 group-hover:text-emerald-400 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
+                    <ImageIcon className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
+                    <Video className="w-5 h-5 text-teal-400" />
+                  </div>
+                </div>
+                <span className="mt-3 text-sm font-medium text-slate-200">
+                  Click to upload Photo or Video proof
+                </span>
+                <span className="text-xs text-slate-400 mt-1">
+                  Supports JPG, PNG, MP4, MOV (max 25MB). Directly visible to department officers.
+                </span>
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  onChange={handleMediaUpload}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <div className="bg-slate-900 border border-slate-700 rounded-xl p-3.5 flex flex-col sm:flex-row items-center gap-4">
+                {mediaType === 'video' ? (
+                  <video
+                    src={mediaUrl}
+                    controls
+                    className="w-full sm:w-48 h-32 object-cover rounded-lg bg-black"
+                  />
+                ) : (
+                  <img
+                    src={mediaUrl}
+                    alt="Complaint Evidence"
+                    className="w-full sm:w-48 h-32 object-cover rounded-lg bg-black"
+                  />
+                )}
+                <div className="flex-1 text-xs text-slate-300">
+                  <span className="font-semibold text-emerald-400 block text-sm mb-1">
+                    {mediaType === 'video' ? '📹 Video Evidence Attached' : '📸 Photo Evidence Attached'}
+                  </span>
+                  <span className="text-slate-400 truncate block font-mono text-xs">{mediaName || 'Attached Media'}</span>
+                  <p className="mt-2 text-slate-400">
+                    This media proof will be stored with your complaint so investigating officers can rapidly verify and resolve the issue.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}

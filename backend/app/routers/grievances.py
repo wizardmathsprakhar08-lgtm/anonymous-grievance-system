@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from app.database import get_db
 from app.models import Grievance, Department, StatusLog, Officer
@@ -47,10 +47,34 @@ def format_grievance_response(g: Grievance, db: Session) -> GrievanceResponse:
         is_duplicate=g.is_duplicate,
         duplicate_of_id=g.duplicate_of_id,
         status=g.status,
+        media_url=g.media_url,
+        media_type=g.media_type,
+        resolved_by=g.resolved_by,
+        resolution_note=g.resolution_note,
+        resolved_at=g.resolved_at,
         created_at=g.created_at,
         updated_at=g.updated_at,
         status_logs=logs
     )
+
+@router.get("", response_model=List[GrievanceResponse])
+def get_public_grievances(
+    status: Optional[str] = None,
+    department_id: Optional[int] = None,
+    limit: int = 50,
+    offset: int = 0,
+    db: Session = Depends(get_db)
+):
+    """Public endpoint to browse all registered complaints in the app."""
+    query = db.query(Grievance)
+    if status and status.lower() != "all":
+        query = query.filter(Grievance.status == status.lower())
+    if department_id:
+        query = query.filter(Grievance.department_id == department_id)
+    
+    # Sort by urgency and recency
+    records = query.order_by(Grievance.created_at.desc()).offset(offset).limit(limit).all()
+    return [format_grievance_response(g, db) for g in records]
 
 @router.post("", response_model=GrievanceResponse)
 def submit_grievance(req: GrievanceSubmitRequest, db: Session = Depends(get_db)):
@@ -89,6 +113,8 @@ def submit_grievance(req: GrievanceSubmitRequest, db: Session = Depends(get_db))
         urgency_score=pipeline_res["urgency_score"],
         is_duplicate=pipeline_res["is_duplicate"],
         duplicate_of_id=pipeline_res["duplicate_of_id"],
+        media_url=req.media_url,
+        media_type=req.media_type,
         status="submitted"
     )
     db.add(grievance)
